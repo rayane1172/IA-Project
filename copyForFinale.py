@@ -1,4 +1,4 @@
-from customtkinter import * 
+from customtkinter import *
 from customtkinter import CTk, CTkScrollableFrame  # Assurez-vous que customtkinter est installé
 
 app1 = CTk()

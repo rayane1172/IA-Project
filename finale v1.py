@@ -56,22 +56,23 @@ def avAction():
         
 
     def demarer_chainage_avant():
-        def grandNbrPremisse(LRD): #? fonction pour trouver la regle du plus nombre des premisses
+        def grandNbrPremisse(conflit): #? fonction pour trouver la regle du plus nombre des premisses
             maxLenPremisse = 0
-            for regle in LRD:
+            index = 0
+            for i, regle in enumerate(conflit):
                 premisse, conclusion = regle
                 if maxLenPremisse < len(premisse):
                     maxLenPremisse = len(premisse)
-                    index = LRD.index(regle)
-            return index #? retourner la position du la regle ayant le plus de premisses
-        
+                    index = i
+            return index #? retourner la position dans la list des conflit du la regle ayant le plus de premisses
+
         #? Masquer chaque place d'ecriture apres l'execution du ch avant
         # for r in regles_entries:
         #     r.pack_forget()
         
         base_des_faits = set(bfentry.get().split(","))  # placer la base des faits dans un 'set'
         
-        global regles 
+        global regles
         regles = [] # todo:list des regles e.g => (a,b)->e
         
         regles = [({"a","b"},"f"),({"f","h"},"i"),({"d","h","g"},"a"),({"o","g"},"h"),({"e","h"},"b"),({"g","a"},"b"),({"g","h"},"p"),({"g","h"},"q"),({"d","o","g"},"j")]
@@ -92,7 +93,6 @@ def avAction():
         while len(LRD) != 0 and ButTrouver == False:
             for regle in LRD:
                 premisse, conclusion = regle
-                
                 indice = grandNbrPremisse(LRD) #trouver l'indice du du regle de plus des premisse 
                 if LRD[indice] != LRD[LRD.index(regle)]: continue # en passer tout les regles du la boucle "for" , jusqu'a trouver la regle ayant le plus nombre des premisses
                 if conclusion != BUT:
