@@ -1,0 +1,4 @@
+premierement installer la beb avec la commande : 
+>> pip install customtkinter
+
+voici les exemples d'execution associer dans les images 
