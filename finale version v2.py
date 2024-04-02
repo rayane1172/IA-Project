@@ -20,7 +20,7 @@ but.place(relx=0.5,rely=0.15,anchor="nw")
 rg = CTkLabel(master=app1, text="Enter les regles comme ca (a,x->y,z....) :", font=('Helvetica', 22))
 rg.place(relx=0.2, rely=0.25,anchor="nw")
 
-regles_entries = [] 
+regles_entries = []
 def ajouter_regle():
     entry = CTkEntry(master=app1)
     entry.pack_configure(padx=20, pady=8,anchor="se")
