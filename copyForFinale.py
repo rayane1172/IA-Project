@@ -36,7 +36,7 @@ def filtrage(regles,base_des_faits):
         if premisse.issubset(base_des_faits) and conclusion not in base_des_faits:
             conflit.append((premisse,conclusion))
     return conflit
-    
+
 def grandNbrPremisse(conflit): #? fonction pour trouver la regle du plus nombre des premisses
     maxLenPremisse = 0
     index = 0
@@ -170,9 +170,9 @@ def arAction():
     scrollable_frame2 = CTkScrollableFrame(master=fenAr)
     scrollable_frame2.pack(fill="both", expand=True)
     fenAr.grab_set()
-    
+
     base_des_faits = list(bfentry.get().split(","))  # placer la base des faits dans un 'set'
-    
+
     def filtrage_arr(regles, but):
         conflit = []
         for premisse, conclusion in regles:
@@ -180,10 +180,10 @@ def arAction():
                 conflit.append((premisse,conclusion))
         return conflit
 
-    global regles 
+    global regles
     # regles = [] # todo:list des regles e.g => (a,b)->e
     regles = [(["a","b"],"f"),(["f","h"],"i"),(["d","h","g"],"a"),(["o","g"],"h"),(["e","h"],"b"),(["g","a"],"b"),(["g","h"],"p"),(["g","h"],"q"),(["d","o","g"],"j")]
-    
+
     # for entry in regles_entries:
     #     regle_value = entry.get() #return regle in string value
     #     if '->' in regle_value:
@@ -192,131 +192,134 @@ def arAction():
     #         regles.append((premisses,conclusion)) # charger la list des regles
 
     reglesCopy = regles.copy() #? un copie des regles utiliser pour indexer les regles appliquer
-    
+
     LDP =[]
     LDP.insert(0,BUT)
     list_des_conclusion_deja_prouve = []
     nv_but = BUT
     i = 1
-    
-    def find_regle(conflit): #trouver la regle ayant plus des premisse 
+
+    def find_regle(conflit): #trouver la regle ayant plus des premisse
+        indice = grandNbrPremisse(conflit) #trouver l'indice du regle de plus des premisse
         for regle in conflit:
-            indice = grandNbrPremisse(conflit) #trouver l'indice du regle de plus des premisse 
-            if conflit[indice] == conflit[conflit.index(regle)]: 
+            if conflit[indice] == conflit[conflit.index(regle)]:
                 return regle
 
     conflit = []
-    historique = {} # pour souvgarder l'historique pour chaque cycle 
-    def chainage_arr(regles, LDP, nv_but, conflit,list_des_conclusion_deja_prouve,i, base_des_faits,historique):
+    historique = {} # pour souvgarder l'historique pour chaque cycle
+    newGoalTable = []
+    # newGoalTable.append(nv_but)
+
+    def chainage_arr(regles, LDP,nv_but, newGoalTable, conflit,list_des_conclusion_deja_prouve,i, base_des_faits,historique):
+
 
         echec = False
-        
-        # historique.update({f"{i}":[regles, LDP, nv_but, conflit, list_des_conclusion_deja_prouve,i, base_des_faits]})
+
         while len(LDP) != 0:
-            
             print(f"le cycle N'{i}".center(30,"#"))
-            
-            LDPcopy = LDP #souvgarder la valleur avant la modification
+            LDPcopy = LDP.copy() #souvgarder la valleur avant la modification
             print(f"Print le LDPcopy avant du modifier LDP orginal : {LDPcopy}")
-            
+
+            # oldBut = nv_but #souvgarder la valleur d'entree du but avant faire la boucle
+            newGoalTable.append(nv_but)
+            nv_but = newGoalTable[len(newGoalTable) - 1]
+
             if nv_but in base_des_faits:
-                # LDPcopy = LDP #souvgarder la valleur avant la modification
-                
+                print(f"\n-> our but is : {nv_but}")
+                # print(f"\n-> our old but is : {oldBut}")
+
                 print(f"LIst LDP avant demarer : {LDP}")
                 conflit = filtrage_arr(regles, nv_but)
-                
-                LDP.remove(nv_but) #supprimer le but deja prouver d'apres BF
+
+                LDP.remove(nv_but) #todo: supprimer le but deja prouver d'apres BF
+
                 print(f"---> But [{nv_but}] appartient aux base des faits, on le supprimer")
-                
+
                 print("-" * 20)
                 print(f"le list LDP : {LDP}")
                 print("-" * 20)
-                
+
                 if len(LDP) != 0: # verifier est ce que il y a des sous-but a prouver
-                    nv_but = LDP[0]               
+                    nv_but = LDP[0]
                     print(f"Le nouveau But a prouver => {nv_but}".center(60,"_"))
-                
+                else:
+                    break
             elif nv_but in list_des_conclusion_deja_prouve:
-                # LDPcopy = LDP #souvgarder la valleur avant la modification
-                
+                print(f"\n-> our but is : {nv_but}")
+                # print(f"\n-> our old but is : {oldBut}")
+
                 print(f"LDP avant supprimer le nv_but precedant -> {LDP}")
                 conflit = filtrage_arr(regles, nv_but)
                 print(f"Nv-BUt value is : {nv_but}")
-                
-                LDP.remove(nv_but) #supprimer le but deja prouver et remplacer par ces premisse
+
+                LDP.remove(nv_but) #todo: supprimer le but deja prouver et remplacer par ces premisse
 
                 print(f"---> But [{nv_but}] deja prouver dans les cycles precedent")
                 print(f"List LDP est : {LDP}",end="\n\n")
+
                 if len(LDP) != 0:
                     nv_but = LDP[0]
                     print(f"Le nouveau But a prouver => {nv_but}".center(60,"_"))
-                
-            else: # else n'est pas prouver precedament
-                # LDPcopy = LDP #souvgarder la valleur avant la modification
-                
-            
-                conflit = filtrage_arr(regles, nv_but)
-                # regle = find_regle(conflit)
-                
-                # regles.remove(regles[regles.index(regle)])
-                
-                if not conflit: # pas de conflit (None) 
+                else:
+                    break
 
+            else: # else n'est pas prouver precedament
+                print(f"\n-> our but is : {nv_but}")
+                # print(f"\n-> our old but is : {oldBut}")
+                conflit = filtrage_arr(regles, nv_but)
+
+                if not conflit: # pas de conflit (None)
                     print(f"List LDP dans (if non conflit) : {LDP}")
-                    
                     print(f"Je Bloquer de le cycle {i}")
                     print(f"i block with LDP -> {LDP}")
                     echec = True
-                    
+
+                    # newGoalTable.remove(newGoalTable[len(newGoalTable) - 1 ]) #todo: supprimer le but precedent qui n'est pas utiliser autrefois
+
+                    del newGoalTable[-1] #supprimer dernier but que n'est pas utiliser
+                    print(f"new goal table is : {newGoalTable}")
+
+                    nv_but = newGoalTable[len(newGoalTable) - 1]
+
+
                     global last_cycle
                     last_cycle = historique[f"{i-1}"]
                     print(f"-------------------------------------------------------> L'indice pour last_cycle est : >>>>>>> {i-1}")
-                    
-                    # print(last_cycle[0]) # la regle qui provoque l'erreur est supprimer 
-                    # break
-                    
-                    chainage_arr(*last_cycle) # passer le tableau "last_cycle" comme paramatre
-                    
+                    break
+                    # chainage_arr(*last_cycle) # passer le tableau "last_cycle" comme paramatre
                 else:
                     regle = find_regle(conflit)
                     premisses, conclusion = regle
                     list_des_conclusion_deja_prouve.append(conclusion)
-                    
+
                     print(f"==>(appliquer R{reglesCopy.index(regle) + 1})")
-                    
+
                     print(f"List des conflit is : \n{conflit}")
-                
-                    LDP.remove(nv_but) # supprimer le conclusion precedent pour prouver
+
+                    LDP.remove(nv_but) # supprimer le conclusion precedent
                     for p in reversed(premisses):
                         LDP.insert(0,p)
-                
-                    nv_but = LDP[0] 
-                
+
+                    nv_but = LDP[0]
+
                     print("-" * 20)
                     print(f"le list LDP : {LDP}")
                     print("-" * 20)
-                    
+
                     regles.remove(regles[regles.index(regle)])
-                    
+
                     print(f"Le nouveau But a prouver => {nv_but}".center(60,"_"))
-                    
+                    print(f"\nnew goal table is : {newGoalTable}\n")
             print(f"\n\n ** les regles finale pour ce boucle : {regles} ********\n\n")
-            
-            historique.update({f"{i}":[regles, LDPcopy, nv_but, conflit, list_des_conclusion_deja_prouve,i, base_des_faits,historique]})
+
+            historique.update({f"{i}":[regles, LDPcopy,nv_but, newGoalTable, conflit, list_des_conclusion_deja_prouve,i, base_des_faits,historique]})
             i += 1
-            
-            # historique.update({f"{i}":[LDP]})
-            
-            # print(f"-----------> cycle N'{i}")
-            # print(f"??????????????? la list des regles genrales  : {regles} \n with length = {len(regles)}")
-            
-            
-        # cycle= historique[f"{i- 1}"]
-        print(f"list LDP donnees  : {last_cycle[1]}")
-        print(f"stop in cycle { last_cycle[0]}\n\n ",end="\n\n")
-        print(f" regles with length : { len(regles)}")
-            
-        
+        # print("-" * 50)
+        # print(f"list LDP donnees  : {last_cycle[1]}")
+        # print(f"stop in cycle { last_cycle[0]}\n\n ",end="\n\n")
+        # print(f" regles with length : { len(regles)}")
+        # print("-" * 50)
+
         if len(LDP) == 0:
             print("-" * 50)
             print(f"==========> Arret De MI, --> Le But [{BUT}] est Prouvee <=======")
@@ -326,10 +329,11 @@ def arAction():
             print("\n","!" * 50)
             print("-----> Allez en Les cycles Precedent Puis essaye tout les cas du Conflit <---- ")
             print("!" * 50,end="\n\n")
-            # chainage_arr(*last_cycle) # passer le tableau "last_cycle" comme paramatre
+            print(f"apres le break le nv but is   -> {nv_but}")
+            chainage_arr(*last_cycle) # passer le tableau "last_cycle" comme paramatre
 
 
-    chainage_arr(regles, LDP, nv_but, conflit, list_des_conclusion_deja_prouve,i,base_des_faits,historique)
+    chainage_arr(regles, LDP,nv_but, newGoalTable, conflit, list_des_conclusion_deja_prouve,i,base_des_faits,historique)
     fenAr.mainloop()
 
 
