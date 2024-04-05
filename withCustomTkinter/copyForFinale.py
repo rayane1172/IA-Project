@@ -142,19 +142,19 @@ def avAction():
                 separator.pack(fill="x", padx=10)  #horizontal
                 
                 infere1 = CTkLabel(master=scrollable_frame,text=f"On trouver le BUT [{BUT}] , le mouteur d'inference s'arrete ", font=('Helvetica', 22),bg_color="green")
-                    
+
                 infere1.pack_configure(padx=16, pady=12,anchor="center")
                 ButTrouver = True #? pour quiter la boucle "while"
-                
+
                 break #? pour quiter la boucle "for"
-        
+
     if len(conflit) == 0 and not ButTrouver:
         cycle = CTkLabel(master=scrollable_frame, text=f"Cycle {i}",font=("Helvetica", 17),bg_color="green")
         cycle.pack_configure(padx=12,pady=6,anchor="center")
         i+=1
-        echec = CTkLabel(master=scrollable_frame,text=f"Le Mouteur d'inference S'Arrete, il existe pas des regles applicables !! ", font=('Helvetica', 22),bg_color="red") 
+        echec = CTkLabel(master=scrollable_frame,text=f"Le Mouteur d'inference S'Arrete, il existe pas des regles applicables !! ", font=('Helvetica', 22),bg_color="red")
         echec.pack_configure(padx=20, pady=15,anchor="center")
-        
+
 
     fenAv.mainloop()
 
@@ -212,11 +212,13 @@ def arAction():
 
     def chainage_arr(regles, LDP,nv_but, newGoalTable, conflit,list_des_conclusion_deja_prouve,i, base_des_faits,historique):
 
-
+        # global but
+        # global i
         echec = False
 
         while len(LDP) != 0:
-            print(f"le cycle N'{i}".center(30,"#"))
+            print("\n","-" * 100,end="\n")
+            print(f"\nle cycle N'{i}".center(30,"#"))
             LDPcopy = LDP.copy() #souvgarder la valleur avant la modification
             print(f"Print le LDPcopy avant du modifier LDP orginal : {LDPcopy}")
 
@@ -244,6 +246,7 @@ def arAction():
                     print(f"Le nouveau But a prouver => {nv_but}".center(60,"_"))
                 else:
                     break
+
             elif nv_but in list_des_conclusion_deja_prouve:
                 print(f"\n-> our but is : {nv_but}")
                 # print(f"\n-> our old but is : {oldBut}")
@@ -265,22 +268,22 @@ def arAction():
 
             else: # else n'est pas prouver precedament
                 print(f"\n-> our but is : {nv_but}")
-                # print(f"\n-> our old but is : {oldBut}")
                 conflit = filtrage_arr(regles, nv_but)
 
                 if not conflit: # pas de conflit (None)
-                    print(f"List LDP dans (if non conflit) : {LDP}")
+                    print(f"mon nv_but value is  --------> {nv_but}")
+                    # print(f"List LDP dans (if non conflit) : {LDP}")
                     print(f"Je Bloquer de le cycle {i}")
                     print(f"i block with LDP -> {LDP}")
                     echec = True
 
                     # newGoalTable.remove(newGoalTable[len(newGoalTable) - 1 ]) #todo: supprimer le but precedent qui n'est pas utiliser autrefois
 
-                    del newGoalTable[-1] #supprimer dernier but que n'est pas utiliser
+                    del newGoalTable[-1] #supprimer dernier but que n'est pas utiliser (comme "e" dans l'ex)
                     print(f"new goal table is : {newGoalTable}")
 
                     nv_but = newGoalTable[len(newGoalTable) - 1]
-
+                    print(f"********** = le nv_but value when we break with no conflit => : {nv_but}")
 
                     global last_cycle
                     last_cycle = historique[f"{i-1}"]
@@ -310,9 +313,12 @@ def arAction():
 
                     print(f"Le nouveau But a prouver => {nv_but}".center(60,"_"))
                     print(f"\nnew goal table is : {newGoalTable}\n")
-            print(f"\n\n ** les regles finale pour ce boucle : {regles} ********\n\n")
+
+            # print(f"\n\n ** les regles finale pour ce boucle : {regles} ********\n\n")
+            # print(f"********** = le nv_but value when quite any LOOP : {nv_but}")
 
             historique.update({f"{i}":[regles, LDPcopy,nv_but, newGoalTable, conflit, list_des_conclusion_deja_prouve,i, base_des_faits,historique]})
+            print(f"L'historique only avant souvgarder the value of new LOOP : {historique[i]['historique']}")
             i += 1
         # print("-" * 50)
         # print(f"list LDP donnees  : {last_cycle[1]}")

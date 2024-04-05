@@ -1,4 +1,4 @@
-from customtkinter import * 
+from customtkinter import *
 from customtkinter import CTk, CTkScrollableFrame  # Assurez-vous que customtkinter est installé
 
 app1 = CTk()
@@ -63,11 +63,10 @@ def avAction():
     fenAv.grab_set()
 
     base_des_faits = set(bfentry.get().split(","))  # placer la base des faits dans un 'set'
-    
-    
+
     regles = [] # todo:list des regles e.g => (a,b)->e
     regles = [({"a","b"},"f"),({"f","h"},"i"),({"d","h","g"},"a"),({"o","g"},"h"),({"e","h"},"b"),({"g","a"},"b"),({"g","h"},"p"),({"g","h"},"q"),({"d","o","g"},"j")]
-    
+
     # for entry in regles_entries:
     #     regle_value = entry.get() #return regle in string value
     #     if '->' in regle_value:
@@ -75,12 +74,12 @@ def avAction():
     #         premisses = set(premisses.split(","))
     #         regles.append((premisses,conclusion)) # charger la list des regles
 
-    
+
     reglesCopy = regles.copy() #? un copie des regles utiliser pour indexer les regles appliquer
 
     conflit = filtrage(regles, base_des_faits) #? conflit: list des regles applicables
     ButTrouver = False
-    
+
     #? tanque la list des regles applicable n'est pas vide
     i = 1
     while len(conflit) != 0 and ButTrouver == False:
@@ -90,63 +89,63 @@ def avAction():
             if conflit[indice] != conflit[conflit.index(regle)]: continue # en passer tout les regles du la boucle "for" , jusqu'a trouver la regle ayant le plus nombre des premisses
             if conclusion != BUT:
                 base_des_faits.add(conclusion)
-                
+
                 #ajouter le nombre du cycle
                 cycleaff = CTkLabel(master=scrollable_frame, text=f"Cycle {i}",font=("Helvetica", 17,"bold"),bg_color="green")
                 cycleaff.pack_configure(padx=12,pady=6,anchor="center")
                 i+=1
-                
+
                 #afficher conflit :
                 affconflit= CTkLabel(master=scrollable_frame, text="LIST DES CONFLITS :")
                 affconflit.pack_configure(padx=12,pady=8,anchor="center")
-                
+
                 for r in conflit:
                     c1= CTkLabel(master=scrollable_frame, text=f"R = {r}")
                     c1.pack_configure(padx=12, pady=10,anchor="center")
-                
+
                 infere = CTkLabel(master=scrollable_frame,text=f"==>(Appliquer R{reglesCopy.index(regle) + 1}) En ajouter [{conclusion}] dans la base de faits <==",font=("Helvetica", 15,"bold"))
                 infere.pack_configure(padx=12, pady=12,anchor="center")
 
                 nvbase =CTkLabel(master=scrollable_frame,text=f"Nouvelle base de faits {base_des_faits}", font=('Helvetica', 18))
                 nvbase.pack_configure(padx=14,pady=12,anchor="center")
-                
+
                 #add a separator
                 separator = CTkLabel(scrollable_frame,text="",height=0.5,fg_color="gray")
                 separator.pack(fill="x", padx=10)  #horizontal
-                
+
                 regles.remove(regles[regles.index(regle)])
                 #? supprimer la regle apres l'application
-                
+
                 conflit = filtrage(regles, base_des_faits)
-                
+
             else: # ?dans le cas du trouver le but
                 base_des_faits.add(conclusion)  #? ajouter le but dans la bf et quitez l'operation
-                
+
                 #ajouter le nombre du cycle
                 cycleaf3 = CTkLabel(master=scrollable_frame, text=f"Cycle {i}",font=("Helvetica", 17,"bold"),bg_color="green")
                 cycleaf3.pack_configure(padx=12,pady=6,anchor="center")
                 i+=1
-                
+
                 # afficher list des conflit :
                 for r in conflit:
                     c2 = CTkLabel(master=scrollable_frame, text=f"R = {r}")
                     c2.pack_configure(padx=12,pady=10,anchor="center")
-                
+
                 infere = CTkLabel(master=scrollable_frame,text=f"==>(Appliquer R{reglesCopy.index(regle) + 1}) En ajouter [{conclusion}] dans la base de faits <==",font=("Helvetica", 15,"bold"))
                 infere.pack_configure(padx=12, pady=12,anchor="center")
-                    
+
                 nvbase = CTkLabel(master=scrollable_frame,text=f"Nouvelle base de faits {base_des_faits}",font=('Helvetica', 18))
                 nvbase.pack_configure(padx=14,pady=12,anchor="center")
-                
+
                 #add a separator
                 separator2 = CTkLabel(scrollable_frame, height=0.5,text="", fg_color="gray")
                 separator2.pack(fill="x", padx=10)  #horizontal
-                
+
                 infere1 = CTkLabel(master=scrollable_frame,text=f"On trouver le BUT [{BUT}] , le mouteur d'inference s'arrete ", font=('Helvetica', 22),bg_color="green")
-                
+
                 infere1.pack_configure(padx=16, pady=12,anchor="center")
                 ButTrouver = True #? pour quiter la boucle "while"
-                
+
                 break #? pour quiter la boucle "for"
 
     if len(conflit) == 0 and not ButTrouver:
