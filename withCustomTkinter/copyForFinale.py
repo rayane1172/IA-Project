@@ -212,8 +212,6 @@ def arAction():
 
     def chainage_arr(regles, LDP,nv_but, newGoalTable, conflit,list_des_conclusion_deja_prouve,i, base_des_faits,historique):
 
-        # global but
-        # global i
         echec = False
 
         while len(LDP) != 0:
@@ -241,11 +239,11 @@ def arAction():
                 print(f"le list LDP : {LDP}")
                 print("-" * 20)
 
-                if len(LDP) != 0: # verifier est ce que il y a des sous-but a prouver
-                    nv_but = LDP[0]
-                    print(f"Le nouveau But a prouver => {nv_but}".center(60,"_"))
-                else:
-                    break
+                # if len(LDP) != 0: # verifier est ce que il y a des sous-but a prouver
+                #     nv_but = LDP[0]
+                #     print(f"Le nouveau But a prouver => {nv_but}".center(60,"_"))
+                # else:
+                #     break
 
             elif nv_but in list_des_conclusion_deja_prouve:
                 print(f"\n-> our but is : {nv_but}")
@@ -256,15 +254,15 @@ def arAction():
                 print(f"Nv-BUt value is : {nv_but}")
 
                 LDP.remove(nv_but) #todo: supprimer le but deja prouver et remplacer par ces premisse
-
+                print(f"---> list des conclusion deja prouve est ==> {list_des_conclusion_deja_prouve}")
                 print(f"---> But [{nv_but}] deja prouver dans les cycles precedent")
                 print(f"List LDP est : {LDP}",end="\n\n")
 
-                if len(LDP) != 0:
-                    nv_but = LDP[0]
-                    print(f"Le nouveau But a prouver => {nv_but}".center(60,"_"))
-                else:
-                    break
+                # if len(LDP) != 0:
+                #     nv_but = LDP[0]
+                #     print(f"Le nouveau But a prouver => {nv_but}".center(60,"_"))
+                # else:
+                #     break
 
             else: # else n'est pas prouver precedament
                 print(f"\n-> our but is : {nv_but}")
@@ -285,6 +283,13 @@ def arAction():
                     nv_but = newGoalTable[len(newGoalTable) - 1]
                     print(f"********** = le nv_but value when we break with no conflit => : {nv_but}")
 
+                    # beforeLastCycleLIST_PROUVER = historique[f"{i-2}"][5]
+                    historique[f"{i-2}"][5].pop() #todo :supprimer la dern valleur du list des conclusion deja prouve pour retester
+
+                    # print(f"before last cyce -------> {beforeLastCycleLIST_PROUVER}")
+
+                    # list_des_conclusion_deja_prouve.remove(len(list_des_conclusion_deja_prouve) - 1)
+
                     global last_cycle
                     last_cycle = historique[f"{i-1}"]
                     print(f"-------------------------------------------------------> L'indice pour last_cycle est : >>>>>>> {i-1}")
@@ -293,6 +298,7 @@ def arAction():
                 else:
                     regle = find_regle(conflit)
                     premisses, conclusion = regle
+
                     list_des_conclusion_deja_prouve.append(conclusion)
 
                     print(f"==>(appliquer R{reglesCopy.index(regle) + 1})")
@@ -303,7 +309,7 @@ def arAction():
                     for p in reversed(premisses):
                         LDP.insert(0,p)
 
-                    nv_but = LDP[0]
+                    # nv_but = LDP[0]
 
                     print("-" * 20)
                     print(f"le list LDP : {LDP}")
@@ -311,15 +317,18 @@ def arAction():
 
                     regles.remove(regles[regles.index(regle)])
 
-                    print(f"Le nouveau But a prouver => {nv_but}".center(60,"_"))
                     print(f"\nnew goal table is : {newGoalTable}\n")
 
-            # print(f"\n\n ** les regles finale pour ce boucle : {regles} ********\n\n")
-            # print(f"********** = le nv_but value when quite any LOOP : {nv_but}")
 
             historique.update({f"{i}":[regles, LDPcopy,nv_but, newGoalTable, conflit, list_des_conclusion_deja_prouve,i, base_des_faits,historique]})
-            print(f"L'historique only avant souvgarder the value of new LOOP : {historique[i]['historique']}")
             i += 1
+
+            if len(LDP) != 0:
+                nv_but = LDP[0]
+                print(f"Le nouveau But a prouver => {nv_but}".center(60,"_"))
+            else:
+                break
+
         # print("-" * 50)
         # print(f"list LDP donnees  : {last_cycle[1]}")
         # print(f"stop in cycle { last_cycle[0]}\n\n ",end="\n\n")
