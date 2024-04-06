@@ -1,5 +1,5 @@
 from customtkinter import *
-from customtkinter import CTk, CTkScrollableFrame  # Assurez-vous que customtkinter est installé
+from customtkinter import CTk, CTkScrollableFrame
 
 app1 = CTk()
 app1.geometry("800x550")
