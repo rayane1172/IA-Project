@@ -11,7 +11,7 @@ bfentry = CTkEntry(master=app1, placeholder_text="e.g: A,B,C,D....")
 bfentry.place(relx=0.5,rely=0.05,anchor="nw")
 
 
-t2 = CTkLabel(master=app1,text="Enter le but(Obligatoire dans le chainage Arriere)", font=("Helvetica",20))
+t2 = CTkLabel(master=app1,text="Enter le but(Obligatoire dans le chainage Arriere)", font=("Helvetica",16))
 t2.place(relx=0.05,rely=0.15,anchor="nw")
 but = CTkEntry(master=app1, placeholder_text="e.g: A")
 but.place(relx=0.5,rely=0.15,anchor="nw")
@@ -51,8 +51,6 @@ def grandNbrPremisse(conflit): #? fonction pour trouver la regle du plus nombre 
 
 
 
-
-
 def avAction():
     BUT = but.get()
     fenAv = CTkToplevel()
@@ -65,14 +63,14 @@ def avAction():
     base_des_faits = set(bfentry.get().split(","))  # placer la base des faits dans un 'set'
 
     regles = [] # todo:list des regles e.g => (a,b)->e
-    regles = [({"a","b"},"f"),({"f","h"},"i"),({"d","h","g"},"a"),({"o","g"},"h"),({"e","h"},"b"),({"g","a"},"b"),({"g","h"},"p"),({"g","h"},"q"),({"d","o","g"},"j")]
+    # regles = [({"a","b"},"f"),({"f","h"},"i"),({"d","h","g"},"a"),({"o","g"},"h"),({"e","h"},"b"),({"g","a"},"b"),({"g","h"},"p"),({"g","h"},"q"),({"d","o","g"},"j")]
 
-    # for entry in regles_entries:
-    #     regle_value = entry.get() #return regle in string value
-    #     if '->' in regle_value:
-    #         premisses, conclusion = regle_value.split("->") #todo: returner partie gauche du regle dans premisse et partie droite du regle dans "conclusion"
-    #         premisses = set(premisses.split(","))
-    #         regles.append((premisses,conclusion)) # charger la list des regles
+    for entry in regles_entries:
+        regle_value = entry.get() #return regle in string value
+        if '->' in regle_value:
+            premisses, conclusion = regle_value.split("->") #todo: returner partie gauche du regle dans premisse et partie droite du regle dans "conclusion"
+            premisses = set(premisses.split(","))
+            regles.append((premisses,conclusion)) # charger la list des regles
 
 
     reglesCopy = regles.copy() #? un copie des regles utiliser pour indexer les regles appliquer
@@ -159,233 +157,183 @@ def avAction():
     fenAv.mainloop()
 
 
+
 def arAction():
-    pass
-# def arAction():
 
-#     BUT = but.get()
-#     fenAr = CTkToplevel()
-#     fenAr.geometry("800x800")
-#     fenAr.title("Chainage Arriere")
-#     scrollable_frame2 = CTkScrollableFrame(master=fenAr)
-#     scrollable_frame2.pack(fill="both", expand=True)
-#     fenAr.grab_set()
-    
-#     base_des_faits = list(bfentry.get().split(","))  # placer la base des faits dans un 'set'
-    
-#     def filtrage_arr(regles, but):
-#         conflit = []
-#         for premisse, conclusion in regles:
-#             if conclusion == but:
-#                 conflit.append((premisse,conclusion))
-#         return conflit
+    BUT = but.get()
+    fenAr = CTkToplevel()
+    fenAr.geometry("800x800")
+    fenAr.title("Chainage Arriere")
+    scrollable_frame2 = CTkScrollableFrame(master=fenAr)
+    scrollable_frame2.pack(fill="both", expand=True)
+    fenAr.grab_set()
 
-#     global regles 
-#     # regles = [] # todo:list des regles e.g => (a,b)->e
-#     regles = [(["a","b"],"f"),(["f","h"],"i"),(["d","h","g"],"a"),(["o","g"],"h"),(["e","h"],"b"),(["g","a"],"b"),(["g","h"],"p"),(["g","h"],"q"),(["d","o","g"],"j")]
-    
-#     # for entry in regles_entries:
-#     #     regle_value = entry.get() #return regle in string value
-#     #     if '->' in regle_value:
-#     #         premisses, conclusion = regle_value.split("->") #todo: returner partie gauche du regle dans premisse et partie droite du regle dans "conclusion"
-#     #         premisses = list(premisses.split(","))
-#     #         regles.append((premisses,conclusion)) # charger la list des regles
+    base_des_faits = list(bfentry.get().split(","))  # placer la base des faits dans un 'set'
 
-#     reglesCopy = regles.copy() #? un copie des regles utiliser pour indexer les regles appliquer
-    
-#     LDP =[]
-#     LDP.insert(0,BUT)
-#     list_des_conclusion_deja_prouve = []
-#     nv_but = BUT
-#     i = 1
-    
-#     def find_regle(conflit): #trouver la regle ayant plus des premisse 
-#         for regle in conflit:
-#             indice = grandNbrPremisse(conflit) #trouver l'indice du regle de plus des premisse 
-#             if conflit[indice] == conflit[conflit.index(regle)]: 
-#                 return regle
+    def filtrage_arr(regles, but):
+        conflit = []
+        for premisse, conclusion in regles:
+            if conclusion == but:
+                conflit.append((premisse,conclusion))
+        return conflit
 
-#     conflit = []
-#     def chainage_arr(regles, LDP, nv_but, conflit,list_des_conclusion_deja_prouve,i, base_des_faits):
+    global regles
+    regles = [] # todo:list des regles e.g => (a,b)->e
 
-#         historique = {} # pour souvgarder l'historique pour chaque cycle 
-#         echec = False
-        
-#         # historique.update({f"{i}":[regles, LDP, nv_but, conflit, list_des_conclusion_deja_prouve,i, base_des_faits]})
-#         while len(LDP) != 0:
-            
-            
-#             #TODO: ajouter le nombre du cycle
-#             cycle = CTkLabel(master=scrollable_frame2, text=f"Cycle {i}",font=("Helvetica", 17,"bold"),bg_color="green")
-#             cycle.pack_configure(padx=12,pady=6,anchor="center")
-            
-#             # historique.update({f"{i}":[regles, LDP, nv_but, conflit, list_des_conclusion_deja_prouve,i, base_des_faits]})
-#             # i += 1
-            
-#             # print(f"-----------> cycle N'{i}")
-#             # print(f"??????????????? la list des regles genrales  : {regles} \n with length = {len(regles)}")
-            
-#             # i+= 1
-            
-#             if nv_but in base_des_faits:
-#                 conflit = filtrage_arr(regles, nv_but)
-                
-#                 LDP.remove(LDP[0]) #supprimer le but deja prouver d'apres BF
-                
-#                 #TODO: afficher le but 
-#                 butaff = CTkLabel(master=scrollable_frame2, text=f"---> But [{nv_but}] appartient aux base des faits, on le supprimer")
-#                 butaff.pack_configure(padx=12,pady=8,anchor="center")
-                
-#                 # print(f"---> But [{nv_but}] appartient aux base des faits, on le supprimer")
-                
-#                 #TODO: afficher LDP : 
-#                 ldpAff = CTkLabel(master=scrollable_frame2, text=f"LIST LDP : {LDP}",font=('Helvetica', 22))
-#                 ldpAff.pack_configure(padx=12,pady=12,anchor="center")
-                
-#                 # print("-" * 20)
-#                 # print(f"le list LDP : {LDP}")
-#                 # print("-" * 20)
-                
-#                 if len(LDP) != 0: # verifier est ce que il y a sous-but a prouver
-#                     nv_but = LDP[0]               
-#                     # print(f"Le nouveau But a prouver => {nv_but}".center(60,"_"))
-#                     #TODO: afficher le nv but pour prouver
-#                     butaff = CTkLabel(master=scrollable_frame2, text=f"Le nouveau But a prouver => [ {nv_but} ]", font=('Helvetica', 24),bg_color="yellow",fg_color="black")
-#                     butaff.pack_configure(padx=12,pady=14,anchor="center")
-                
-#                 #add a separator 
-#                 separator = CTkLabel(scrollable_frame2, height=0.5,text="", fg_color="gray")
-#                 separator.pack(fill="x", padx=15)  #horizontal
-                
-                
-#             elif nv_but in list_des_conclusion_deja_prouve:
-#                 conflit = filtrage_arr(regles, nv_but)
-                
-#                 LDP.remove(LDP[0]) #supprimer le but deja prouver et remplacer par ces premisse
+    #second ligne is just an exemple :
+    # regles = [(["a","b"],"f"),(["f","h"],"i"),(["d","h","g"],"a"),(["o","g"],"h"),(["e","h"],"b"),(["g","a"],"b"),(["g","h"],"p"),(["g","h"],"q"),(["d","o","g"],"j")]
 
-#                 # print(f"---> But [{nv_but}] deja prouver dans les cycles precedent")
-#                 #TODO: afficher le but deja prouver
-#                 butaff = CTkLabel(master=scrollable_frame2, text=f"---> But [{nv_but}] deja prouver dans les cycles precedent")
-#                 butaff.pack_configure(padx=12,pady=8,anchor="center")
-                
-                
-#                 if len(LDP) != 0:
-#                     nv_but = LDP[0]
-#                     # print(f"Le nouveau But a prouver => {nv_but}".center(60,"_"))
-#                     #TODO: afficher le nv but pour prouver
-#                     butaff = CTkLabel(master=scrollable_frame2, text=f"Le nouveau But a prouver => [ {nv_but} ]", font=('Helvetica', 24),bg_color="yellow",fg_color="black")
-#                     butaff.pack_configure(padx=12,pady=12,anchor="center")
-                    
-                    
-#                 #add a separator 
-#                 separator = CTkLabel(scrollable_frame2, height=0.5,text="", fg_color="gray")
-#                 separator.pack(fill="x", padx=15)  #horizontal
-                
-                
-#             else: # else n'est pas prouver precedament
-                
-#                 conflit = filtrage_arr(regles, nv_but)
-#                 # regle = find_regle(conflit)
-#                 # regles.remove(regles[regles.index(regle)])
-#                 if not conflit: # pas de conflit (None) 
-#                     # i-= 1
-#                     conflitaff = CTkLabel(master=scrollable_frame2, text="LIST DES CONFLITS VIDE ??",font=('Helvetica',23,"bold"),fg_color="red")
-#                     conflitaff.pack_configure(padx=12,pady=14,anchor="center")
-                    
-#                     # print(f"Je Bloquer de le cycle {i}")
-#                     #TODO: afficher le blocage 
-#                     butaff = CTkLabel(master=scrollable_frame2, text=f"Je Bloquer de le cycle {i}",font=('Helvetica', 22,"bold"),fg_color="red")
-#                     butaff.pack_configure(padx=12,pady=8,anchor="center")
-                    
-#                     echec = True
-#                     last_cycle = historique[f"{i-1}"]
-#                     # regles.remove(regles[regles.index(regle)])
-                    
-#                     print(last_cycle[0]) # la regle qui provoque l'erreur est supprimer 
-#                     break
-#                 else:
-#                     regle = find_regle(conflit)
-#                     premisses, conclusion = regle
-#                     list_des_conclusion_deja_prouve.append(conclusion)
-                    
-#                     # print(f"==>(appliquer R{reglesCopy.index(regle) + 1})")
-                    
-#                     #TODO: afficher nbr regle  appliquee
-#                     infere = CTkLabel(master=scrollable_frame2,text=f"==>(appliquer R{reglesCopy.index(regle) + 1})",font=("Helvetica", 15,"bold"))
-#                     infere.pack_configure(padx=12, pady=12,anchor="center")
-                    
-                    
-#                     #TODO: afficher list des conflit 
-#                     conflitaff = CTkLabel(master=scrollable_frame2, text="LIST DES CONFLITS :")
-#                     conflitaff.pack_configure(padx=12,pady=14,anchor="center")
-#                     for regle in conflit:
-#                         listConflit = CTkLabel(master=scrollable_frame2, text=f"R = {regle}") 
-#                         listConflit.pack_configure(padx=12, pady=16,anchor="center")
-                    
-                    
-#                     # print(f"List des conflit is : \n{conflit}")
-                
-#                     LDP.remove(LDP[0]) # supprimer le conclusion precedent pour prouver
-#                     for p in reversed(premisses):
-#                         LDP.insert(0,p)
-                
-#                     nv_but = LDP[0] 
-                
-#                     # print("-" * 20)
-#                     # print(f"le list LDP : {LDP}")
-#                     # print("-" * 20)
-                    
-#                     #TODO: afficher LDP : 
-#                     ldpAff = CTkLabel(master=scrollable_frame2, text=f"LIST LDP : {LDP}",font=('Helvetica', 22))
-#                     ldpAff.pack_configure(padx=12,pady=18,anchor="center")
-                    
-                    
-#                     regles.remove(regles[regles.index(regle)])
-#                     # print(f"Le nouveau But a prouver => {nv_but}".center(60,"_"))
+    for entry in regles_entries:
+        regle_value = entry.get() #return regle in string value
+        if '->' in regle_value:
+            premisses, conclusion = regle_value.split("->") #todo: returner partie gauche du regle dans premisse et partie droite du regle dans "conclusion"
+            premisses = list(premisses.split(","))
+            regles.append((premisses,conclusion)) # charger la list des regles
 
-#                     #TODO: afficher le nv but pour prouver
-#                     butaff = CTkLabel(master=scrollable_frame2, text=f"Le nouveau But a prouver => [ {nv_but} ]", font=('Helvetica', 24),bg_color="yellow",fg_color="black")
-#                     butaff.pack_configure(padx=12,pady=20,anchor="center")
-                
-#                 # print(f"-----------> cycle N'{i}")
-#                 # print(f"??????????????? la list des regles genrales  : {regles}")
-                
-#                 #add a separator 
-#                 separator = CTkLabel(scrollable_frame2, height=0.5,text="", fg_color="gray")
-#                 separator.pack(fill="x", padx=25)  #horizontal
-            
-#             historique.update({f"{i}":[regles, LDP, nv_but, conflit, list_des_conclusion_deja_prouve,i, base_des_faits]})
-#             i += 1
-            
-#             # print(f"-----------> cycle N'{i}")
-#             # print(f"??????????????? la list des regles genrales  : {regles} \n with length = {len(regles)}")
-#         cycle= historique[f"{i-1}"]
-#         print(f"{ cycle[0]}\n\n --> cycle N {cycle[5]}")
-#         print(f" regles with length : { len(regles)}")
-            
-        
-#         if len(LDP) == 0:
-#             # print("-" * 50)
-#             # print(f"==========> Arret De MI, --> Le But [{BUT}] est Prouvee <=======")
-#             # print("-" * 50)
-            
-#             #TODO: afficher le but : 
-#             infere1 = CTkLabel(master=scrollable_frame2,text=f"===> Arret De MI, --> Le But [{BUT}] est Prouvee <====", font=('Helvetica', 22),bg_color="green")
-#             infere1.pack_configure(padx=16, pady=22,anchor="center")
-        
-#         if echec:
-#             # print("\n","!" * 50)
-#             # print("-----> Allez en Les cycles Precedent Puis essaye tout les cas du Conflit <---- ")
-#             # print("!" * 50,end="\n\n")
-#             #TODO: afficher l'arret dans le cycle
-#             arret= CTkLabel(master=scrollable_frame2,text="-----> Allez en Les cycles Precedent Puis essaye tout les cas du Conflit <---- ", font=('Helvetica', 22),bg_color="red") 
-#             arret.pack_configure(padx=20, pady=15,anchor="center")
-            
-#             chainage_arr(*last_cycle) # passer le tableau "last_cycle" comme paramatre
+    reglesCopy = regles.copy() #? un copie des regles utiliser pour indexer les regles appliquer
+
+    LDP =[]
+    LDP.insert(0,BUT)
+    list_des_conclusion_deja_prouve = []
+    nv_but = BUT
+    i = 1
+
+    def find_regle(conflit): #trouver la regle ayant plus des premisse
+        indice = grandNbrPremisse(conflit) #trouver l'indice du regle de plus des premisse
+        for regle in conflit:
+            if conflit[indice] == conflit[conflit.index(regle)]:
+                return regle
+
+    conflit = []
+    historique = {} # pour souvgarder l'historique pour chaque cycle
+    newGoalTable = []
+
+    def chainage_arr(regles, LDP,nv_but, newGoalTable, conflit,list_des_conclusion_deja_prouve,i, base_des_faits,historique):
+        echec = False
+
+        while len(LDP) != 0:
+
+            #todo: ajouter le nombre du cycle
+            cycle = CTkLabel(master=scrollable_frame2, text=f"Cycle {i}",font=("Helvetica", 17,"bold"),bg_color="green")
+            cycle.pack_configure(padx=12,pady=6,anchor="center")
+            LDPcopy = LDP.copy() #souvgarder la valleur avant la modification
+
+            newGoalTable.append(nv_but)
+            nv_but = newGoalTable[len(newGoalTable) - 1]
+
+            #todo: afficher le nv but pour prouver
+            butaff = CTkLabel(master=scrollable_frame2, text=f"Le nouveau But a prouver => [ {nv_but} ]", font=('Helvetica', 24),bg_color="yellow",fg_color="black")
+            butaff.pack_configure(padx=12,pady=12,anchor="center")
+
+            if nv_but in base_des_faits:
+                conflit = filtrage_arr(regles, nv_but)
+
+                LDP.remove(nv_but) #todo: supprimer le but deja prouver d'apres BF
+
+                #todo: afficher le but
+                butaff = CTkLabel(master=scrollable_frame2, text=f"---> But [{nv_but}] appartient aux base des faits, on le supprimer",font=("Helvetica",17,"bold"))
+                butaff.pack_configure(padx=12,pady=8,anchor="center")
+
+                #todo: afficher LDP :
+                ldpAff = CTkLabel(master=scrollable_frame2, text=f"LIST LDP : {LDP}",font=('Helvetica', 22,"bold"),fg_color="green")
+                ldpAff.pack_configure(padx=12,pady=12,anchor="center")
+
+                #add a separator
+                separator = CTkLabel(scrollable_frame2, height=0.5,text="", fg_color="gray")
+                separator.pack(fill="x", padx=15)  #horizontal
+
+            elif nv_but in list_des_conclusion_deja_prouve:
+                conflit = filtrage_arr(regles, nv_but)
+
+                LDP.remove(nv_but) #todo-> supprimer le but deja prouver et remplacer par ces premisse
+
+                #todo: afficher le but deja prouver
+                butaff = CTkLabel(master=scrollable_frame2, text=f"---> But [{nv_but}] deja prouver dans les cycles precedent",font=("Helvetica",17,"bold"))
+                butaff.pack_configure(padx=12,pady=8,anchor="center")
+
+                #add a separator
+                separator = CTkLabel(scrollable_frame2, height=0.5,text="", fg_color="gray")
+                separator.pack(fill="x", padx=15)  #horizontal
+
+            else: # else n'est pas prouver precedament
+
+                conflit = filtrage_arr(regles, nv_but)
+
+                if not conflit: # pas de conflit (None)
+
+                    conflitaff = CTkLabel(master=scrollable_frame2, text="LIST DES CONFLITS VIDE ??",font=('Helvetica',23,"bold"),fg_color="red")
+                    conflitaff.pack_configure(padx=12,pady=14,anchor="center")
+
+                    echec = True
+
+                    #todo: afficher le blocage
+                    butaff = CTkLabel(master=scrollable_frame2, text=f"Je Bloquer dans le cycle {i},--> BACKTRACKING TO CYCLE N-[{i-1}]",font=('Helvetica', 22,"bold"),fg_color="red")
+                    butaff.pack_configure(padx=12,pady=8,anchor="center")
+
+                    del newGoalTable[-1] #todo: supprimer dernier but que n'est pas utiliser (comme "e" dans l'ex)
+                    nv_but = newGoalTable[len(newGoalTable) - 1]
+
+                    historique[f"{i-2}"][5].pop() #todo :supprimer le avant dernier valleur du list des conclusion deja prouve pour retester
+
+                    global last_cycle
+                    last_cycle = historique[f"{i-1}"]
+                    break
+
+                else:
+                    regle = find_regle(conflit)
+                    premisses, conclusion = regle
+                    list_des_conclusion_deja_prouve.append(conclusion)
+
+                    #todo: afficher nbr regle  appliquee
+                    infere = CTkLabel(master=scrollable_frame2,text=f"==>(appliquer R{reglesCopy.index(regle) + 1})",font=("Helvetica", 17,"bold"))
+                    infere.pack_configure(padx=12, pady=12,anchor="center")
+
+                    #todo: afficher list des conflit
+                    conflitaff = CTkLabel(master=scrollable_frame2, text="LIST DES CONFLITS :",font=("Helvetica",17,"bold"))
+                    conflitaff.pack_configure(padx=12,pady=14,anchor="center")
+                    for r in conflit:
+                        listConflit = CTkLabel(master=scrollable_frame2, text=f"R = {r}",font=("Helvetica",15),fg_color="blue")
+                        listConflit.pack_configure(padx=12, pady=16,anchor="center")
+
+                    LDP.remove(nv_but) #todo-> supprimer le conclusion precedent pour prouver
+                    for p in reversed(premisses):
+                        LDP.insert(0,p)
+
+                    #todo: afficher LDP :
+                    ldpAff = CTkLabel(master=scrollable_frame2, text=f"LIST LDP : {LDP}",font=('Helvetica', 22),fg_color="green")
+                    ldpAff.pack_configure(padx=12,pady=18,anchor="center")
+
+                    regles.remove(regles[regles.index(regle)])
+
+                #add a separator
+                separator = CTkLabel(scrollable_frame2, height=0.5,text="", fg_color="gray")
+                separator.pack(fill="x", padx=25)  #horizontal
+
+            historique.update({f"{i}":[regles, LDPcopy,nv_but, newGoalTable, conflit, list_des_conclusion_deja_prouve,i, base_des_faits,historique]})
+            i += 1
+            if len(LDP) != 0:
+                # #todo: afficher le nv but pour prouver
+                # butaff = CTkLabel(master=scrollable_frame2, text=f"Le nouveau But a prouver => [ {nv_but} ]", font=('Helvetica', 24),bg_color="yellow",fg_color="black")
+                # butaff.pack_configure(padx=12,pady=12,anchor="center")
+                nv_but = LDP[0]
+            else:
+                break
+
+        if len(LDP) == 0:
+            #todo: afficher l'arret :
+            infere1 = CTkLabel(master=scrollable_frame2,text=f"===> Arret De MI, --> Le But [{BUT}] est Prouvee <====", font=('Helvetica', 22),bg_color="green")
+            infere1.pack_configure(padx=16, pady=22,anchor="center")
+
+        if echec:
+            #todo: afficher l'arret dans le cycle
+            arret= CTkLabel(master=scrollable_frame2,text=f"-----> Allez en Les cycles Precedent N-[{i - 1}] Puis essaye tout les cas du Conflit REST <---- ", font=('Helvetica', 22),bg_color="red")
+            arret.pack_configure(padx=20, pady=15,anchor="center")
+
+            chainage_arr(*last_cycle) # passer le tableau "last_cycle" comme paramatre
 
 
-#     chainage_arr(regles, LDP, nv_but, conflit, list_des_conclusion_deja_prouve,i,base_des_faits )
-#     fenAr.mainloop()
+    chainage_arr(regles, LDP,nv_but, newGoalTable, conflit, list_des_conclusion_deja_prouve,i,base_des_faits,historique)
+    fenAr.mainloop()
 
 
 
