@@ -251,6 +251,10 @@ def arAction():
                 butaff = CTkLabel(master=scrollable_frame2, text=f"---> But [{nv_but}] deja prouver dans les cycles precedent",font=("Helvetica",17,"bold"))
                 butaff.pack_configure(padx=12,pady=8,anchor="center")
 
+                #todo: afficher LDP :
+                ldpAff = CTkLabel(master=scrollable_frame2, text=f"LIST LDP : {LDP}",font=('Helvetica', 22,"bold"),fg_color="green")
+                ldpAff.pack_configure(padx=12,pady=12,anchor="center")
+
                 #add a separator
                 separator = CTkLabel(scrollable_frame2, height=0.5,text="", fg_color="gray")
                 separator.pack(fill="x", padx=15)  #horizontal
@@ -271,7 +275,7 @@ def arAction():
                     butaff.pack_configure(padx=12,pady=8,anchor="center")
 
                     del newGoalTable[-1] #todo: supprimer dernier but que n'est pas utiliser (comme "e" dans l'ex)
-                    nv_but = newGoalTable[len(newGoalTable) - 1]
+                    nv_but = newGoalTable[len(newGoalTable) - 1] # le nv_but valeur prendre la valleur de nv_but du cycle precedent dans le cas n'est de conflit avec dans le cycle acctuel
 
                     historique[f"{i-2}"][5].pop() #todo :supprimer le avant dernier valleur du list des conclusion deja prouve pour retester
 
@@ -326,7 +330,7 @@ def arAction():
 
         if echec:
             #todo: afficher l'arret dans le cycle
-            arret= CTkLabel(master=scrollable_frame2,text=f"-----> Allez en Les cycles Precedent N-[{i - 1}] Puis essaye tout les cas du Conflit REST <---- ", font=('Helvetica', 22),bg_color="red")
+            arret= CTkLabel(master=scrollable_frame2,text=f"-----> Allez au Cycle Precedent N-[{i - 1}] Puis essayez tout les cas du Conflit <---- ", font=('Helvetica', 22),bg_color="red")
             arret.pack_configure(padx=20, pady=15,anchor="center")
 
             chainage_arr(*last_cycle) # passer le tableau "last_cycle" comme paramatre
