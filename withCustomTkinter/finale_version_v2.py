@@ -205,7 +205,7 @@ def arAction():
                 return regle
 
     conflit = []
-    historique = {} # pour souvgarder l'historique pour chaque cycle
+    historique = {} # pour souvgarder l'historique pour chaque cycle (regleApp, LDP,..)
     newGoalTable = []
 
     def chainage_arr(regles, LDP,nv_but, newGoalTable, conflit,list_des_conclusion_deja_prouve,i, base_des_faits,historique):
@@ -219,7 +219,7 @@ def arAction():
             LDPcopy = LDP.copy() #souvgarder la valleur avant la modification
 
             newGoalTable.append(nv_but)
-            nv_but = newGoalTable[len(newGoalTable) - 1]
+            nv_but = newGoalTable[len(newGoalTable) - 1] #prendre tjr dernier valleur dans le tableau 'newGoalTable'
 
             #todo: afficher le nv but pour prouver
             butaff = CTkLabel(master=scrollable_frame2, text=f"Le nouveau But a prouver => [ {nv_but} ]", font=('Helvetica', 24),bg_color="yellow",fg_color="black")
@@ -245,7 +245,7 @@ def arAction():
             elif nv_but in list_des_conclusion_deja_prouve:
                 conflit = filtrage_arr(regles, nv_but)
 
-                LDP.remove(nv_but) #todo-> supprimer le but deja prouver et remplacer par ces premisse
+                LDP.remove(nv_but) #todo-> supprimer le but deja prouver
 
                 #todo: afficher le but deja prouver
                 butaff = CTkLabel(master=scrollable_frame2, text=f"---> But [{nv_but}] deja prouver dans les cycles precedent",font=("Helvetica",17,"bold"))
@@ -259,7 +259,7 @@ def arAction():
                 separator = CTkLabel(scrollable_frame2, height=0.5,text="", fg_color="gray")
                 separator.pack(fill="x", padx=15)  #horizontal
 
-            else: # else n'est pas prouver precedament
+            else: #le nv_but n'est pas prouver precedament
 
                 conflit = filtrage_arr(regles, nv_but)
 
@@ -274,16 +274,17 @@ def arAction():
                     butaff = CTkLabel(master=scrollable_frame2, text=f"Je Bloquer dans le cycle {i},--> BACKTRACKING TO CYCLE N-[{i-1}]",font=('Helvetica', 22,"bold"),fg_color="red")
                     butaff.pack_configure(padx=12,pady=8,anchor="center")
 
-                    del newGoalTable[-1] #todo: supprimer dernier but que n'est pas utiliser (comme "e" dans l'ex)
-                    nv_but = newGoalTable[len(newGoalTable) - 1] # le nv_but valeur prendre la valleur de nv_but du cycle precedent dans le cas n'est de conflit avec dans le cycle acctuel
+                    del newGoalTable[-1] #todo: supprimer dernier but que n'est pas utiliser (comme "e" dans l'exemple)
 
-                    historique[f"{i-2}"][5].pop() #todo :supprimer le avant dernier valleur du list des conclusion deja prouve pour retester
+                    nv_but = newGoalTable[len(newGoalTable) - 1] #todo: le nv_but valeur prendre la valleur de nv_but du cycle precedent dans le cas il y a un conflit
+
+                    historique[f"{i-2}"][5].pop() #todo :supprimer l'avant dernier valleur du list "des conclusion deja prouvee" pour retester
 
                     global last_cycle
-                    last_cycle = historique[f"{i-1}"]
+                    last_cycle = historique[f"{i-1}"] #todo: retour vers le cycle precedent pour tester est ce que je peux declencher avec autre valleur
                     break
 
-                else:
+                else:  #le cas d'jouter des nv premisse
                     regle = find_regle(conflit)
                     premisses, conclusion = regle
                     list_des_conclusion_deja_prouve.append(conclusion)
@@ -321,7 +322,7 @@ def arAction():
                 # butaff.pack_configure(padx=12,pady=12,anchor="center")
                 nv_but = LDP[0]
             else:
-                break
+                break #break while condition
 
         if len(LDP) == 0:
             #todo: afficher l'arret :
@@ -333,7 +334,7 @@ def arAction():
             arret= CTkLabel(master=scrollable_frame2,text=f"-----> Allez au Cycle Precedent N-[{i - 1}] Puis essayez tout les cas du Conflit <---- ", font=('Helvetica', 22),bg_color="red")
             arret.pack_configure(padx=20, pady=15,anchor="center")
 
-            chainage_arr(*last_cycle) # passer le tableau "last_cycle" comme paramatre
+            chainage_arr(*last_cycle) # passer le tableau des donnes d'un cycle => "last_cycle" comme paramatre
 
 
     chainage_arr(regles, LDP,nv_but, newGoalTable, conflit, list_des_conclusion_deja_prouve,i,base_des_faits,historique)
