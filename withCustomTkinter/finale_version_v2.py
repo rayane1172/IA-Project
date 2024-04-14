@@ -34,7 +34,7 @@ btn.place(relx=0.4, rely=0.3,anchor="nw")
 def filtrage(regles,base_des_faits):
     conflit = [] #list des regles applicable
     for premisse,conclusion in regles:
-        if premisse.issubset(base_des_faits) and conclusion not in base_des_faits:
+        if premisse.issubset(base_des_faits):
             conflit.append((premisse,conclusion))
     return conflit
 
@@ -46,9 +46,8 @@ def grandNbrPremisse(conflit): #? fonction pour trouver la regle du plus nombre 
         if maxLenPremisse < len(premisse):
             maxLenPremisse = len(premisse)
             index = i
-    # print(f"index trouver dans la fonction ==> {index}")
-    return index #? retourner la position dans la list des conflit du la regle ayant le plus de premisses
 
+    return index #? retourner la position dans la list des conflit du la regle ayant le plus de premisses
 
 
 def avAction():
@@ -83,7 +82,7 @@ def avAction():
     while len(conflit) != 0 and ButTrouver == False:
         for regle in conflit:
             premisse, conclusion = regle
-            indice = grandNbrPremisse(conflit) #trouver l'indice du du regle de plus des premisse 
+            indice = grandNbrPremisse(conflit) #trouver l'indice du du regle de plus des premisse
             if conflit[indice] != conflit[conflit.index(regle)]: continue # en passer tout les regles du la boucle "for" , jusqu'a trouver la regle ayant le plus nombre des premisses
             if conclusion != BUT:
                 base_des_faits.add(conclusion)
@@ -113,7 +112,6 @@ def avAction():
 
                 regles.remove(regles[regles.index(regle)])
                 #? supprimer la regle apres l'application
-
                 conflit = filtrage(regles, base_des_faits)
 
             else: # ?dans le cas du trouver le but
@@ -170,7 +168,7 @@ def arAction():
 
     base_des_faits = list(bfentry.get().split(","))  # placer la base des faits dans un 'set'
 
-    def filtrage_arr(regles, but):
+    def filtrage_arr(regles, but): #trouver list des conflit
         conflit = []
         for premisse, conclusion in regles:
             if conclusion == but:
