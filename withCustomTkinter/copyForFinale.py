@@ -37,16 +37,16 @@ def filtrage(regles,base_des_faits):
             conflit.append((premisse,conclusion))
     return conflit
 
-def grandNbrPremisse(conflit): #? fonction pour trouver la regle du plus nombre des premisses
-    maxLenPremisse = 0
-    index = 0
-    for i, regle in enumerate(conflit):
-        premisse, conclusion = regle
-        if maxLenPremisse < len(premisse):
-            maxLenPremisse = len(premisse)
-            index = i
-    # print(f"index trouver dans la fonction ==> {index}")
-    return index #? retourner la position dans la list des conflit du la regle ayant le plus de premisses
+    def grandNbrPremisse(conflit): #? fonction pour trouver la regle du plus nombre des premisses
+        maxLenPremisse = 0
+        index = 0
+        for i, regle in enumerate(conflit):
+            premisse, conclusion = regle
+            if maxLenPremisse < len(premisse):
+                maxLenPremisse = len(premisse)
+                index = i
+        # print(f"index trouver dans la fonction ==> {index}")
+        return index #? retourner la position dans la list des conflit du la regle ayant le plus de premisses
 
 
 
